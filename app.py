@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, computed_field
 from typing import Literal, Annotated
@@ -72,19 +72,42 @@ class UserInput(BaseModel):
             return 2
         else:
             return 3
-
-@app.post('/predict')
+@app.post("/predict")
 def predict_premium(data: UserInput):
+    try:
+        input_df = pd.DataFrame([{
+            "bmi": data.bmi,
+            "age_group": data.age_group,
+            "lifestyle_risk": data.lifestyle_risk,
+            "city_tier": data.city_tier,
+            "income_lpa": data.income_lpa,
+            "occupation": data.occupation
+        }])
 
-    input_df = pd.DataFrame([{
-        'bmi': data.bmi,
-        'age_group': data.age_group,
-        'lifestyle_risk': data.lifestyle_risk,
-        'city_tier': data.city_tier,
-        'income_lpa': data.income_lpa,
-        'occupation': data.occupation
-    }])
+        # Prediction
+        prediction = model.predict(input_df)[0]
 
-    prediction = model.predict(input_df)[0]
+        # Probabilities
+        probabilities = model.predict_proba(input_df)[0]
 
-    return JSONResponse(status_code=200, content={'predicted_category': prediction})
+        # Class names
+        classes = model.classes_
+
+        # Convert to percentage
+        class_probabilities = {
+            cls: f"{prob*100:.2f}%"
+            for cls, prob in zip(classes, probabilities)
+        }
+
+        confidence = f"{max(probabilities)*100:.2f}%"
+
+        return {
+            "response": {
+                "predicted_category": prediction,
+                "confidence": confidence,
+                "class_probabilities": class_probabilities
+            }
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

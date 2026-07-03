@@ -19,30 +19,43 @@ occupation = st.selectbox(
 )
 
 if st.button("Predict Premium Category"):
-    input_data = {
+
+    payload = {
         "age": age,
         "weight": weight,
         "height": height,
         "income_lpa": income_lpa,
         "smoker": smoker,
         "city": city,
-        "occupation": occupation
+        "occupation": occupation,
     }
 
     try:
-        response = requests.post(API_URL, json=input_data)
-        result = response.json()
+        response = requests.post(API_URL, json=payload)
 
-        if response.status_code == 200 and "response" in result:
-            prediction = result["response"]
-            st.success(f"Predicted Insurance Premium Category: **{prediction['predicted_category']}**")
-            st.write("🔍 Confidence:", prediction["confidence"])
-            st.write("📊 Class Probabilities:")
-            st.json(prediction["class_probabilities"])
+        if response.status_code == 200:
+
+            result = response.json()
+
+            prediction = result["response"]["predicted_category"]
+            confidence = result["response"]["confidence"]
+            probabilities = result["response"]["class_probabilities"]
+
+            st.success(f"Predicted Premium Category: **{prediction}**")
+
+            st.metric(
+                label="Confidence",
+                value=confidence
+            )
+
+            st.subheader("Class Probabilities")
+
+            for cls, prob in probabilities.items():
+                st.progress(float(prob[:-1]) / 100)
+                st.write(f"**{cls} : {prob}**")
 
         else:
-            st.error(f"API Error: {response.status_code}")
-            st.write(result)
+            st.error(response.text)
 
     except requests.exceptions.ConnectionError:
-        st.error("❌ Could not connect to the FastAPI server. Make sure it's running.")
+        st.error("Could not connect to FastAPI server.")
