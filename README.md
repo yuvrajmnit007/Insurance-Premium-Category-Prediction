@@ -76,7 +76,7 @@ Insurance-Premium-Prediction/
 
 Frontend: https://insurance-premium-category-prediction-h89qz7jj6crorvlukw6nyn.streamlit.app/
 
-Backend API Docs: https://insurance-premium-category-prediction-1.onrender.com
+Backend API Docs: https://insurance-premium-category-prediction-1.onrender.com/predict
 
 ## ▶️ Running the Project
 
