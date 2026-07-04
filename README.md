@@ -74,9 +74,9 @@ Insurance-Premium-Prediction/
 ---
 ## 🚀 Live Demo
 
-Frontend: https://insurance-premium-category-prediction-h89qz7jj6crorvlukw6nyn.streamlit.app/
+Frontend: https:https://insurance-premium-category-prediction-h89qz7jj6crorvlukw6nyn.streamlit.app/
 
-Backend API Docs: https://insurance-premium-category-prediction-1.onrender.com/predict
+Backend API Docs: https://insurance-premium-category-prediction-1.onrender.com/docs
 
 ## ▶️ Running the Project
 
