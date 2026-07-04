@@ -123,7 +123,7 @@ The machine learning model, feature engineering, model training, and evaluation 
 
 ### Application Development
 
-The **FastAPI backend**, **API integration**, **frontend development**, and deployment of the machine learning model into a complete web application were developed by **Yuvraj Choudhary**.
+The **FastAPI backend**, **API integration**, **frontend development**, and deployment of the machine learning model into a complete web application were developed by **me**.
 
 ---
 
